@@ -1,7 +1,25 @@
 let users = require('../models/users.models');
 
-module.exports.getLoginStatus = function (req, res, next) {
-    res.send("Hello World");
+module.exports.authenticate = function (req, res, next) {
+    if (req.session && req.session.username){
+        return next();
+    }
+    else {
+        res.statusCode = 401;
+        return res.send("You need to log in.");
+    }
+}
+module.exports.userLogout = function (req, res, next) {
+    if (req.session) {
+        req.session.destroy(function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                console.log("Logout Succeed!");
+                return res.redirect('/');
+            }
+        });
+    }
 }
 
 module.exports.userRegister = function (req, res, next) {
@@ -40,7 +58,9 @@ module.exports.userLogin = function (req, res, next) {
                 return res.send(err.message);
             }
             else {
-                return res.send(username+" Login Succeed!");
+                req.session.username = username;
+                console.log(username + " Login Succeed!");
+                return res.redirect('/overall');
             }
         });
     }
