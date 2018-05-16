@@ -10,7 +10,6 @@ let RevisionSchema = new mongoose.Schema({
 RevisionSchema.statics.getRevisionNumByArticle = function (callback) {
     let top = [];
     let bottom = [];
-
     this.aggregate([{
             $group: {
                 _id: "$title",
@@ -24,44 +23,21 @@ RevisionSchema.statics.getRevisionNumByArticle = function (callback) {
                 revision_num: 1
             }
         },
-        {   $sort: { revision_num: -1 } },
-        {   $limit: 10 }
+        {   $sort: { revision_num: -1 } }
     ])
     .then(function (result) {
-        top = result;
+        top = result.slice(0, 10);
+        bottom = result.slice(-10);
+        return callback(null, top, bottom);
     })
     .catch(function (err) {
         return callback(err);
     });
-    this.aggregate([{
-            $group: {
-                _id: "$title",
-                revision_num: { $sum: 1 }
-            }
-        },
-        {
-            $project: {
-                title: "$_id",
-                _id : 0,
-                revision_num: 1
-            }
-        },
-        {   $sort: { revision_num: -1 } },
-        {   $limit: 10 }
-    ])
-    .then(function (result) {
-        bottom = result;
-    })
-    .catch(function (err) {
-        return callback(err);
-    });
-
-    return callback(null, top, bottom);
 }
 
-RevisionSchema.statics.getUniqueUserNumByArticle() = function (callback) {
-    let top = {};
-    let bottom = {};
+RevisionSchema.statics.getUniqueUserNumByArticle = function (callback) {
+    let top = [];
+    let bottom = [];
     this.aggregate([
         {   $match: {anon: null} },
         {
@@ -72,46 +48,60 @@ RevisionSchema.statics.getUniqueUserNumByArticle() = function (callback) {
         },
         {
             $project: {
-                "title": "$_id",
+                title: "$_id",
                 _id : 0,
                 userNum: { $size: "$userSet" }
             }
         },
-        {   $sort: { userNum: -1 } },
-        {   $limit: 1 }
+        {   $sort: { userNum: -1 } }
     ])
     .then(function (result) {
-        top = result;
+        top = result.slice(0, 1);
+        bottom = result.slice(-1);
+        return callback(null, top, bottom);
     })
     .catch(function (err) {
         return callback(err);
     });
-    this.aggregate([
-        {   $match: {anon: null} },
-        {
-            $group: {
-                _id: "$title",
-                userSet: { $addToSet: "$user" }
-            }
-        },
-        {
-            $project: {
-                "title": "$_id",
-                _id : 0,
-                userNum: { $size: "$userSet" }
-            }
-        },
-        {   $sort: { userNum: 1 } },
-        {   $limit: 1 }
-    ])
-    .then(function (result) {
-        bottom = result;
-    })
-    .catch(function (err) {
-        return callback(err);
-    });
+}
 
-    return callback(null, top, bottom);
+RevisionSchema.statics.getHistoryByArticle = function (callback) {
+    let top = [];
+    let bottom = [];
+    this.aggregate([
+        {
+            $project: {
+                timestamp: {
+                    $dateFromString: { dateString: "$timestamp" }
+                },
+                title: 1,
+                _id: 0
+            }
+        },
+        {
+            $group: {
+                _id: "$title",
+                firstTime: { $min: "$timestamp" },
+                lastTime: { $max: "$timestamp" }
+            }
+        },
+        {
+            $project: {
+                title: "$_id",
+                _id : 0,
+                history: { "$subtract": [ "$lastTime", "$firstTime" ] }
+            }
+        },
+        {   $sort: { history: -1 } }
+    ])
+    .then(function (result) {
+        top = result.slice(0, 3);
+        bottom = result.slice(-3);
+        return callback(null, top, bottom);
+    })
+    .catch(function (err) {
+        return callback(err);
+    });
 }
 
 let revision = mongoose.model('revision', RevisionSchema, 'revision');
