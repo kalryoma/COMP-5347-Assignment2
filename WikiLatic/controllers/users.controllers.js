@@ -2,6 +2,7 @@ let users = require('../models/users.models');
 
 module.exports.authenticate = function (req, res, next) {
     if (req.session && req.session.username){
+        console.log(req.session.username+' already logged in.');
         return next();
     }
     else {
@@ -15,7 +16,7 @@ module.exports.userLogout = function (req, res, next) {
             if (err) {
                 return next(err);
             } else {
-                console.log("Logout Succeed!");
+                console.log(req.session.username + " Logout Succeed!");
                 return res.redirect('/');
             }
         });
@@ -60,7 +61,7 @@ module.exports.userLogin = function (req, res, next) {
             else {
                 req.session.username = username;
                 console.log(username + " Login Succeed!");
-                return res.redirect('/overall');
+                return res.redirect('/analytics/overall');
             }
         });
     }

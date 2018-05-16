@@ -20,7 +20,7 @@ UserSchema.statics.authenticate = function (username, password, callback) {
                 return callback(err);
             }
             else if (!result) {
-                let error = new Error("User not Found! Please Register First!");
+                let error = new Error("User not found, Please Register First!");
                 error.status = 401;
                 return callback(error);
             }
