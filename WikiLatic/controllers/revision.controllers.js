@@ -42,9 +42,22 @@ module.exports.getOverallData = async function (req, res, next) {
                 }
             });
         })
+        start = new Date();
+        RevisionNumByUserType = new Promise((resolve, reject) => {
+            revision.getRevisionNumByUserType(function (err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    returnData["RevisionNumByUserType"] = result;
+                    console.log(new Date() - start);
+                    resolve(returnData);
+                }
+            });
+        })
         await RevisionNumByArticle;
         await UniqueUserNumByArticle;
         await HistoryByArticle;
+        await RevisionNumByUserType;
         return res.send(returnData);
     }
     catch (err){
