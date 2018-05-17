@@ -70,31 +70,18 @@ RevisionSchema.statics.getHistoryByArticle = function (callback) {
     let bottom = [];
     this.aggregate([
         {
-            $project: {
-                timestamp: {
-                    $dateFromString: { dateString: "$timestamp" }
-                },
-                title: 1,
-                _id: 0
-            }
-        },
-        {
             $group: {
                 _id: "$title",
                 firstTime: { $min: "$timestamp" },
                 lastTime: { $max: "$timestamp" }
             }
-        },
-        {
-            $project: {
-                title: "$_id",
-                _id : 0,
-                history: { "$subtract": [ "$lastTime", "$firstTime" ] }
-            }
-        },
-        {   $sort: { history: -1 } }
+        }
     ])
     .then(function (result) {
+        result.forEach(element => {
+            element.history = new Date(element.lastTime)-new Date(element.firstTime);
+        });
+        result.sort((a, b) => b.history-a.history);
         top = result.slice(0, 3);
         bottom = result.slice(-3);
         return callback(null, top, bottom);
