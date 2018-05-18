@@ -181,6 +181,23 @@ RevisionSchema.statics.getArticleData = function (title, callback) {
     });
 }
 
+RevisionSchema.statics.getLatestRevision = function (title, callback) {
+    this.aggregate([{
+            $match: { title: title }
+        }, {
+            $group: {
+                _id: "$title",
+                lastTime: { $max: "$timestamp" }
+            }
+    }])
+    .then(function (result) {
+        return callback(null, result[0]["lastTime"]);
+    })
+    .catch(function (err) {
+        return callback(err);
+    });
+}
+
 RevisionSchema.statics.getArticleDataByUser = function (title, callback) {
     this.aggregate([{
             $match: { 
@@ -240,6 +257,37 @@ RevisionSchema.statics.getArticleDataByUserInYear = function (title, user, callb
     .catch(function (err) {
         return callback(err);
     });
+}
+
+RevisionSchema.statics.getAuthorData = function (author, callback) {
+    this.aggregate([{
+            $match: { user: author}
+        }, {
+            $group: {
+                _id: "$title",
+                revision_time: { $push: "$timestamp" },
+                revision_num: { $sum: 1 }
+            }
+        }, {
+            $sort: { revision_num: -1 }
+        }, {
+            $project: {
+                title: "$_id",
+                _id: 0,
+                revision_num: 1,
+                revision_time: 1
+            }
+    }])
+    .then(function (result) {
+        return callback(null, result);
+    })
+    .catch(function (err) {
+        return callback(err);
+    });
+}
+
+RevisionSchema.methods.saveRevision = function () {
+    
 }
 
 let revision = mongoose.model('revision', RevisionSchema, 'revisions');

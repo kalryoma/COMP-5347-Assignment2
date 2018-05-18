@@ -1,4 +1,5 @@
 let revision = require('../models/revision.models');
+let fetch = require('node-fetch-json');
 
 module.exports.getOverallData = async function (req, res, next) {
     let returnData = {};
@@ -92,9 +93,35 @@ module.exports.getArticleData = async function (req, res, next) {
         try {
             let start = new Date();
             // fetch API
-            // await new Promise((resolve, reject) => {
-                
-            // });
+            await new Promise((resolve, reject) => {
+                revision.getLatestRevision(title, function (err, result) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("LatestRevision: " + (new Date() - start).toString());
+                        resolve(result);
+                    }
+                })
+            }).then(function (latest) {
+                if (new Date()-latest>=24*3600*1000){
+                    let url = "https://en.wikipedia.org/w/api.php?action=query";
+                    url += "&titles="+title.replace(" ", "%20");
+                    url += "&prop=revisions&rvprop=timestamp|user";
+                    url += "&rvend="+latest.toISOString();
+                    url += "&format=json&formatversion=2";
+                    let fetchData = fetch(url, {method: "GET"})
+                        .then(function (data) {
+                            data = data["query"]["pages"][0]["revisions"];
+                            articleData["DownloadNum"] = data.length;
+                            if (data.length>0){
+                                data.forEach(element => {
+                                    
+                                });
+                            }
+                        });
+                    return fetchData;
+                }
+            });
             ArticleData = new Promise((resolve, reject) => {
                 revision.getArticleData(title, function (err, result) {
                     if (err) {
@@ -148,5 +175,43 @@ module.exports.getArticleData = async function (req, res, next) {
     }
     else {
         return res.send("Please Select an Article!");
+    }
+}
+
+module.exports.getAuthorData = async function (req, res, next) {
+    if (req.body.author){
+        let author = req.body.author;
+        let authorData = [];
+        try {
+            let start = new Date();
+            AuthorData = new Promise((resolve, reject) => {
+                revision.getAuthorData(author, function (err, result) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        authorData = result;
+                        console.log("AuthorData: " + (new Date() - start).toString());
+                        if (authorData.length==0){
+                            reject("NoAuthor");
+                        }
+                        else {
+                            resolve(authorData);
+                        }
+                    }
+                });
+            });
+            await AuthorData;
+            return res.send(authorData);
+        } catch (err) {
+            if (err=="NoAuthor") {
+                return res.send({ message: 'Author does not Exist, Try Another One!' });
+            }
+            else {
+                return res.status(500).send({ message: 'Get User Data Failed!' });
+            }
+        }
+    }
+    else {
+        return res.send("Please Enter an Author!");
     }
 }
