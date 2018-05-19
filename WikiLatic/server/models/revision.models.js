@@ -4,7 +4,8 @@ let RevisionSchema = new mongoose.Schema({
     title: String,
     timestamp: Date,
     user: String,
-    anon: String
+    anon: String,
+    type: String
 });
 
 RevisionSchema.statics.getRevisionNumByArticle = function (callback) {
@@ -284,10 +285,6 @@ RevisionSchema.statics.getAuthorData = function (author, callback) {
     .catch(function (err) {
         return callback(err);
     });
-}
-
-RevisionSchema.methods.saveRevision = function () {
-    
 }
 
 let revision = mongoose.model('revision', RevisionSchema, 'revisions');

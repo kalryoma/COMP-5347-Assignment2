@@ -1,4 +1,5 @@
 let revision = require('../models/revision.models');
+let userType = require('../models/types.models');
 let fetch = require('node-fetch-json');
 
 module.exports.getOverallData = async function (req, res, next) {
@@ -107,15 +108,41 @@ module.exports.getArticleData = async function (req, res, next) {
                     let url = "https://en.wikipedia.org/w/api.php?action=query";
                     url += "&titles="+title.replace(" ", "%20");
                     url += "&prop=revisions&rvprop=timestamp|user";
+                    latest.setSeconds(latest.getSeconds()+1);
                     url += "&rvend="+latest.toISOString();
                     url += "&format=json&formatversion=2";
                     let fetchData = fetch(url, {method: "GET"})
                         .then(function (data) {
                             data = data["query"]["pages"][0]["revisions"];
-                            articleData["DownloadNum"] = data.length;
-                            if (data.length>0){
-                                data.forEach(element => {
-                                    
+                            articleData["DownloadNum"] = data? data.length: 0;
+                            if (articleData["DownloadNum"] > 0 && req.body.save) {
+                                data.forEach(async element => {
+                                    let type = element["anon"]? "anon" : "";
+                                    await new Promise((resolve, reject) => {
+                                        if (type==""){
+                                            userType.getType(element["user"], function (err, result) {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    type = result;
+                                                    console.log(element["user"]+" UserType: " + (new Date() - start).toString());
+                                                    resolve(type);
+                                                }
+                                            });
+                                        }
+                                    }).then(function (resultType) {
+                                        let newRevision = new revision({
+                                            title: title,
+                                            timestamp: new Date(element["timestamp"]),
+                                            user: element["user"],
+                                            type: type
+                                        });
+                                        newRevision.isNew = true;
+                                        newRevision.save(err => {
+                                            if (err) 
+                                                throw new Error(err);
+                                        });
+                                    });
                                 });
                             }
                         });
