@@ -97,7 +97,7 @@ module.exports.getArticleData = async function (req, res, next) {
                 revision.getLatestRevision(title, function (err, result) {
                     if (err) {
                         reject(err);
-                    } else {
+                    } else { 
                         console.log("LatestRevision: " + (new Date() - start).toString());
                         resolve(result);
                     }
