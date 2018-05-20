@@ -8,7 +8,6 @@ let UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        unique: true,
         required: true
     }
 });
@@ -21,13 +20,13 @@ UserSchema.statics.authenticate = function (username, password, callback) {
             }
             else if (!result) {
                 let error = new Error("User not found, Please Register First!");
-                error.status = 401;
+                error.status = 403;
                 return callback(error);
             }
             else {
                 if (password!=result.password) {
                     let error = new Error("Wrong Password!");
-                    error.status = 401;
+                    error.status = 401
                     return callback(error);
                 }
                 else {

@@ -12,8 +12,6 @@ router.post('/register', controllers.userRegister);
 router.post('/login', controllers.userLogin);
 router.get('/logout', controllers.userLogout);
 
-// router.get('/analytics', controllers.authenticate, function (req, res, next) {
-//     res.redirect('/analytics/overall');
-// });
+router.get('/analytics', controllers.authenticate);
 
 module.exports = router;

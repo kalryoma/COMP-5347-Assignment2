@@ -2,8 +2,7 @@ let users = require('../models/users.models');
 
 module.exports.authenticate = function (req, res, next) {
     if (req.session && req.session.username){
-        console.log(req.session.username+' already logged in.');
-        return next();
+        return res.send(req.session.username + ' already logged in.');
     }
     else {
         res.statusCode = 401;
@@ -16,8 +15,7 @@ module.exports.userLogout = function (req, res, next) {
             if (err) {
                 return next(err);
             } else {
-                console.log(req.session.username + " Logout Succeed!");
-                return res.redirect('/');
+                return res.send(req.session.username + " Logout Succeed!");
             }
         });
     }
@@ -59,9 +57,13 @@ module.exports.userLogin = function (req, res, next) {
                 return res.send(err.message);
             }
             else {
-                req.session.username = username;
-                console.log(username + " Login Succeed!");
-                return res.redirect('/analytics/overall');
+                if (req.session.username){
+                    return res.send(req.session.username + ' already logged in.');
+                }
+                else {
+                    req.session.username = username;
+                    return res.send(username + " Login Succeed!");
+                }
             }
         });
     }

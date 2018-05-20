@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let session = require('express-session');
+let cors = require('cors');
 
 let authRouter = require('./routes/auth');
 let analyticsRouter = require('./routes/analytics');
@@ -21,6 +22,7 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 //set session
 app.use(session({
