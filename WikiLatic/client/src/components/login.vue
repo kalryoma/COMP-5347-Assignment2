@@ -7,13 +7,15 @@
                 <v-text-field label="Password" type="password" v-model="password" :rules="pwdRules" required></v-text-field>
             </form>
             <div class="error" v-html="error" />
-            <v-dialog v-model="msgDialog" max-width="600px">
+            <v-dialog v-model="msgDialog" persistent max-width="600px">
                 <v-card>
                     <v-card-text>
                         <div class="message" v-html="msg" />
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn flat color="primary" @click="close">Close</v-btn>
+                        <v-btn flat color="green darken-1" @click="close" v-on:click="$emit('closeParent')">
+                            Go to Overall Analysis
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -47,6 +49,7 @@
                     this.msgDialog = true;
                     this.$store.dispatch('setToken', res.data.token);
                     this.$store.dispatch('setUser', this.username);
+                    this.$emit('closeParent');
                 } catch (err) {
                     this.error = err.response.data;
                     this.username = '';
@@ -55,8 +58,9 @@
             },
             close(){
                 this.msgDialog = false;
-                window.location.replace("/");
-            }
+                this.$router.push("/analytics/overall");
+            },
+            closeParent(){}
         }
     }
 </script>

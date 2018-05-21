@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import landing from '@/components/landing'
-import register from '@/components/register'
+import overall from '@/components/overall'
+
 
 Vue.use(Router)
 
@@ -13,9 +14,9 @@ export default new Router({
       component: landing
     },
     {
-      path: '/register',
-      name: 'register',
-      component: register
+      path: '/analytics/overall',
+      name: 'overall',
+      component: overall
     }
   ]
 })

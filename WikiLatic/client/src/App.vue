@@ -1,46 +1,56 @@
 <template>
     <div id="app">
         <v-app>
-            <v-navigation-drawer v-model="drawer" clipped fixed app>
+            <v-navigation-drawer class="cyan" v-model="drawer" clipped fixed temporary app>
                 <v-list dense>
-                    <v-list-tile>
+                    <v-list-tile @click="$router.push('/analytics/overall');drawer=!drawer">
                         <v-list-tile-action>
-                            <v-icon>assessment</v-icon>
+                            <v-icon dark>assessment</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Overall</v-list-tile-title>
+                            <v-list-tile-title>
+                                <a class="router">Overall</a>
+                            </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile>
+                    <v-list-tile @click="$router.push('/analytics/overall');drawer=!drawer">
                         <v-list-tile-action>
-                            <v-icon>inbox</v-icon>
+                            <v-icon dark>inbox</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Individual</v-list-tile-title>
+                            <v-list-tile-title>
+                                <a class="router">Individual</a>
+                            </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile>
+                    <v-list-tile @click="$router.push('/analytics/overall');drawer=!drawer">
                         <v-list-tile-action>
-                            <v-icon>contacts</v-icon>
+                            <v-icon dark>contacts</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Author</v-list-tile-title>
+                            <v-list-tile-title>
+                                <a class="router">Author</a>
+                            </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
             </v-navigation-drawer>
             <v-toolbar app fixed clipped-left class="cyan" dark>
                 <v-toolbar-side-icon v-if="$store.state.logged" @click.stop="drawer=!drawer"></v-toolbar-side-icon>
-                <v-toolbar-title>WikiLatic</v-toolbar-title>
+                <v-toolbar-title @click="$router.push('/')"><a class="router">WikiLatic</a></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items class="hidden-sm-and-down">
                     <v-btn v-if="!$store.state.logged" flat @click.stop="loginDialog=true">Login</v-btn>
                     <v-btn v-if="!$store.state.logged" flat @click.stop="registerDialog=true">Register</v-btn>
                     <v-btn v-if="$store.state.logged" flat>{{ $store.state.user }}</v-btn>
                     <v-btn v-if="$store.state.logged" flat @click="logout">Log Out</v-btn>
-                    <v-dialog v-model="registerDialog" max-width="600px"><register/></v-dialog>
-                    <v-dialog v-model="loginDialog" max-width="600px"><login/></v-dialog>
-                    <v-dialog v-model="msgDialog" max-width="600px">
+                    <v-dialog v-model="registerDialog" max-width="600px">
+                        <register v-on:closeParent="registerDialog=false"/>
+                    </v-dialog>
+                    <v-dialog v-model="loginDialog"  max-width="600px">
+                        <login v-on:closeParent="loginDialog=false"/>
+                    </v-dialog>
+                    <v-dialog v-model="msgDialog" persistent max-width="600px">
                         <v-card>
                             <v-card-text>
                                 <div class="message" v-html="msg" />
@@ -74,11 +84,13 @@
         name: 'app',
         methods: {
             logout () {
+                this.msgDialog = true;
                 this.$store.dispatch('setToken', null);
                 this.$store.dispatch('setUser', null);
             },
             close(){
-                window.location.replace("/");
+                this.msgDialog = false;
+                this.$router.push("/");
             }
         },
         components: {
@@ -106,5 +118,8 @@
     }
     .list__tile__title{
         font-size: 20px;
+    }
+    .router{
+        color: white;
     }
 </style>

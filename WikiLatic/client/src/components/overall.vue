@@ -1,12 +1,7 @@
 <template>
     <v-container grid-list-md text-xs-center id="container">
-        <v-card color="cyan">
-            <v-card-text>
-                <h1>This is a demo of Wikipedia Data Analysis. Please Register and Login to play with more functions.</h1>
-            </v-card-text>
-        </v-card>
         <v-tabs color="cyan" dark slider-color="yellow">
-            <v-tab ripple>Sample View</v-tab>
+            <v-tab ripple>Table</v-tab>
             <v-tab-item>
                 <v-layout row wrap>
                     <v-flex xs6>
@@ -29,22 +24,62 @@
                                     Charts
                                     <v-icon>arrow_drop_down</v-icon>
                                 </v-btn>
-                                <v-list dense>
-                                    <v-list-tile @click="barChart=true;pieChart=false;">
-                                        <v-list-tile-action>
+                                <v-list>
+                                    <v-list-tile>
+                                        <v-list-tile-title @click="showBar">
                                             <v-icon>poll</v-icon>
-                                        </v-list-tile-action>
-                                        <v-list-tile-content>
-                                            <v-list-tile-title>Bar Chart</v-list-tile-title>
-                                        </v-list-tile-content>
+                                            Bar Chart
+                                        </v-list-tile-title>
                                     </v-list-tile>
-                                    <v-list-tile @click="barChart=false;pieChart=true;">
-                                        <v-list-tile-action>
+                                    <v-list-tile>
+                                        <v-list-tile-title @click="showPie">
                                             <v-icon>pie_chart</v-icon>
-                                        </v-list-tile-action>
-                                        <v-list-tile-content>
-                                            <v-list-tile-title>Pie Chart</v-list-tile-title>
-                                        </v-list-tile-content>
+                                            Pie Chart
+                                        </v-list-tile-title>
+                                    </v-list-tile>
+                                </v-list>
+                            </v-menu>
+                            <bar-chart v-if='barChart'/>
+                            <pie-chart v-if='pieChart'/>
+                        </div>
+                    </v-flex>
+                </v-layout>
+            </v-tab-item>
+            <v-tab ripple>Charts</v-tab>
+            <v-tab-item>
+                <v-layout row wrap>
+                    <v-flex xs6>
+                        <div>
+                            <v-menu top offset-y>
+                                <v-btn slot="activator" color="deep-orange" class="MenuBtn">Table</v-btn>
+                            </v-menu>
+                            <v-data-table :headers="headers" :items="articles" hide-actions>
+                                <template slot="items" slot-scope="props">
+                                    <td class="text-xs-center">{{ props.item.title }}</td>
+                                    <td class="text-xs-center">{{ props.item.revisionNum }}</td>
+                                </template>
+                            </v-data-table>
+                        </div>
+                    </v-flex>
+                    <v-flex xs6>
+                        <div>
+                            <v-menu top offset-y>
+                                <v-btn slot="activator" color="deep-orange" class="MenuBtn">
+                                    Charts
+                                    <v-icon>arrow_drop_down</v-icon>
+                                </v-btn>
+                                <v-list>
+                                    <v-list-tile>
+                                        <v-list-tile-title @click="showBar">
+                                            <v-icon>poll</v-icon>
+                                            Bar Chart
+                                        </v-list-tile-title>
+                                    </v-list-tile>
+                                    <v-list-tile>
+                                        <v-list-tile-title @click="showPie">
+                                            <v-icon>pie_chart</v-icon>
+                                            Pie Chart
+                                        </v-list-tile-title>
                                     </v-list-tile>
                                 </v-list>
                             </v-menu>
@@ -67,8 +102,8 @@
             PieChart
         },
         created: function () {
-            if (this.$store.state.logged)
-                this.$router.push('/analytics/overall');
+            if (!this.$store.state.logged)
+                this.$router.push('/');
         },
         data() {
             return {
@@ -122,6 +157,16 @@
                     revisionNum: 23
                 }]
             }
+        },
+        methods: {
+            showBar(){
+                this.barChart = true;
+                this.pieChart = false;
+            },
+            showPie(){
+                this.barChart = false;
+                this.pieChart = true;
+            }
         }
     }
 
@@ -131,11 +176,10 @@
         margin: 0;
         max-width: 100%;
     }
-    .list__tile__action{
-        min-width: 0;
-    }
+
     .MenuBtn {
         font-size: 30px;
         color: #fff;
     }
+
 </style>

@@ -8,17 +8,17 @@
                 <v-text-field label="Confirm Password" type="password" v-model="confirmPW" :rules="cnfPWRules" required></v-text-field>
             </form>
             <div class="error" v-html="error" />
-            <v-dialog v-model="msgDialog" max-width="600px">
+            <v-dialog v-model="msgDialog" persistent max-width="600px">
                 <v-card>
                     <v-card-text>
                         <div class="message" v-html="msg" />
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn flat color="primary" @click="close">Close</v-btn>
+                        <v-btn flat color="green darken-1" @click="close">Go to Login</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-btn dark class="cyan" @click="register">Register</v-btn>
+            <v-btn dark class="cyan" @click="register" v-on:click="$emit('closeParent')">Register</v-btn>
         </v-card-text>
     </v-card>
 </template>
@@ -49,6 +49,7 @@
                     });
                     this.msg = res.data.msg;
                     this.msgDialog = true;
+                    this.$emit('closeParent');
                 } catch (err) {
                     this.error = err.response.data;
                     this.username = '';
@@ -60,7 +61,9 @@
                 this.msgDialog = false;
                 this.$parent.registerDialog = false;
                 this.$parent.loginDialog = true;
-            }
+                this.$router.push('/');
+            },
+            closeParent(){}
         }
     }
 </script>
