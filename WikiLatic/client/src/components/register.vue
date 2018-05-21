@@ -18,7 +18,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-btn dark class="cyan" @click="register" v-on:click="$emit('closeParent')">Register</v-btn>
+            <v-btn dark class="cyan" @click="register">Register</v-btn>
         </v-card-text>
     </v-card>
 </template>
@@ -58,9 +58,11 @@
                 }
             },
             close(){
+                this.username = '';
+                this.password = '';
+                this.confirmPW = '';
                 this.msgDialog = false;
-                this.$parent.registerDialog = false;
-                this.$parent.loginDialog = true;
+                this.$emit('closeParent');
                 this.$router.push('/');
             },
             closeParent(){}

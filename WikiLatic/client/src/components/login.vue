@@ -52,11 +52,11 @@
                     this.$emit('closeParent');
                 } catch (err) {
                     this.error = err.response.data;
-                    this.username = '';
                     this.password = '';
                 }
             },
             close(){
+                this.password = '';
                 this.msgDialog = false;
                 this.$router.push("/analytics/overall");
             },

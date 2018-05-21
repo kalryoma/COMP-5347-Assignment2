@@ -51,7 +51,7 @@
                         <div>
                             <v-card color="light-green lighten-5">
                                 <v-card-text>
-                                    <h2>Articles Edited by the Largest Number of Regular User</h2>
+                                    <h2>Article Edited by the Largest Number of Regular User</h2>
                                 </v-card-text>
                             </v-card>
                             <v-data-table :headers="headers2" :items="topUserNum" hide-actions>
@@ -63,7 +63,7 @@
                             <br>
                             <v-card color="light-green lighten-5">
                                 <v-card-text>
-                                    <h2>Articles Edited by the Smallest Number of Regular User</h2>
+                                    <h2>Article Edited by the Smallest Number of Regular User</h2>
                                 </v-card-text>
                             </v-card>
                             <v-data-table :headers="headers2" :items="bottomUserNum" hide-actions>
