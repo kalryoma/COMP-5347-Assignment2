@@ -9,6 +9,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import { sync } from 'vuex-router-sync'
 import store from '@/store/store'
 
+Vue.use(require('vue-moment'));
 Vue.config.productionTip = false
 Vue.use(Vuetify)
 sync(store, router)
