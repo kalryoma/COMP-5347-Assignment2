@@ -47,14 +47,10 @@
                         password: this.password,
                         confirmPW: this.confirmPW
                     });
-                    if (res.data=="Passwords not Match!" || res.data=="Please fill out the form!")
-                        this.error = res.data;
-                    else{
-                        this.msg = res.data;
-                        this.msgDialog = true;
-                    }
+                    this.msg = res.data.msg;
+                    this.msgDialog = true;
                 } catch (err) {
-                    this.error = "User Already Registered! Try Another One!";
+                    this.error = err.response.data;
                     this.username = '';
                     this.password = '';
                     this.confirmPW = '';
@@ -62,7 +58,8 @@
             },
             close(){
                 this.msgDialog = false;
-                window.location.replace("/");
+                this.$parent.registerDialog = false;
+                this.$parent.loginDialog = true;
             }
         }
     }

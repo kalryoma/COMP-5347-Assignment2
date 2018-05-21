@@ -43,13 +43,10 @@
                         username: this.username,
                         password: this.password,
                     });
-                    if (res.data=="Please fill out the form!")
-                        this.error = res.data;
-                    else{
-                        this.msg = res.data;
-                        this.msgDialog = true;
-                        // this.$store.dispatch('setUser', res.session.username);
-                    }
+                    this.msg = res.data.msg;
+                    this.msgDialog = true;
+                    this.$store.dispatch('setToken', res.data.token);
+                    this.$store.dispatch('setUser', this.username);
                 } catch (err) {
                     this.error = err.response.data;
                     this.username = '';

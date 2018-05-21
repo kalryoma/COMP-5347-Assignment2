@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bar-chart :chart-data="datacollection" :height="300"></bar-chart>
+    <bar-chart :chart-data="datacollection" :height="300" :options="options"></bar-chart>
   </div>
 </template>
 
@@ -13,7 +13,13 @@
     },
     data () {
       return {
-        datacollection: null
+        datacollection: null,
+        options:{
+          title: {
+            display: true,
+            text: 'Revision Number by User Types In Years'
+          }
+        }
       }
     },
     mounted () {

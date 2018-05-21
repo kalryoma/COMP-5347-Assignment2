@@ -10,16 +10,23 @@ export default new Vuex.Store({
       createPersistedState()
     ],
     state: {
+        token: null,
         user: null,
         logged: false
     },
     mutations: {
+        setToken(state, token) {
+            state.token = token;
+            state.logged = !!(token);
+        },
         setUser(state, user) {
             state.user = user;
-            state.logged = !!(token);
         }
     },
     actions: {
+        setToken ({commit}, token) {
+            commit('setToken', token)
+        },
         setUser({commit}, user) {
             commit('setUser', user);
         }

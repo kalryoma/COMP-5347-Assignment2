@@ -10,8 +10,5 @@ router.get('/', function (req, res, next) {
 
 router.post('/register', controllers.userRegister);
 router.post('/login', controllers.userLogin);
-router.get('/logout', controllers.userLogout);
-
-router.get('/analytics', controllers.authenticate);
 
 module.exports = router;

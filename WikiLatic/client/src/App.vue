@@ -69,20 +69,13 @@
             loginDialog: false,
             msgDialog: false,
             drawer: false,
-            msg: ''
+            msg: 'Logout Succeed!'
         }),
         name: 'app',
         methods: {
-            async logout () {
-                try{
-                    let res = await auth.logout();
-                    this.$store.dispatch('setToken', null);
-                    this.$store.dispatch('setUser', null);
-                    this.msg = req.data;
-                }
-                catch(err){
-                    this.msg = err.response.data.error;
-                }
+            logout () {
+                this.$store.dispatch('setToken', null);
+                this.$store.dispatch('setUser', null);
             },
             close(){
                 window.location.replace("/");

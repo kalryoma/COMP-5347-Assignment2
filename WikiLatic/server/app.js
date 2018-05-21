@@ -1,9 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-let session = require('express-session');
 let cors = require('cors');
 
 let authRouter = require('./routes/auth');
@@ -20,17 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: false
 }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-
-//set session
-app.use(session({
-    secret: 'WikiLatic',
-    resave: true,
-    saveUninitialized: false,
-    cookie: {maxAge: 60000}
-}));
 
 app.use('/', authRouter);
 app.use('/analytics', analyticsRouter);

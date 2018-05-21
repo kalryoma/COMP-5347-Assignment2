@@ -25,15 +25,22 @@
                                     <v-icon>arrow_drop_down</v-icon>
                                 </v-btn>
                                 <v-list>
-                                    <v-list-tile v-for="(item, index) in items" :key="index">
-                                        <v-list-tile-action>
-                                            <v-icon>{{ item.icon }}</v-icon>
-                                        </v-list-tile-action>
-                                        <v-list-tile-content>{{ item.title }}</v-list-tile-content>
+                                    <v-list-tile>
+                                        <v-list-tile-title @click="showBar">
+                                            <v-icon>poll</v-icon>
+                                            Bar Chart
+                                        </v-list-tile-title>
+                                    </v-list-tile>
+                                    <v-list-tile>
+                                        <v-list-tile-title @click="showPie">
+                                            <v-icon>pie_chart</v-icon>
+                                            Pie Chart
+                                        </v-list-tile-title>
                                     </v-list-tile>
                                 </v-list>
                             </v-menu>
-                            <bar-chart/>
+                            <bar-chart v-if='barChart'/>
+                            <pie-chart v-if='pieChart'/>
                         </div>
                     </v-flex>
                 </v-layout>
@@ -44,13 +51,17 @@
 </template>
 <script>
     import BarChart from '@/components/BarChart';
+    import PieChart from '@/components/PieChart';
 
     export default {
         components: {
-            BarChart
+            BarChart,
+            PieChart
         },
         data() {
             return {
+                barChart: true,
+                pieChart: false,
                 headers: [{
                         text: 'Article Title',
                         align: 'center',
@@ -97,14 +108,17 @@
                 }, {
                     title: "German",
                     revisionNum: 23
-                }],
-                items: [{
-                        title: 'Bar Chart',
-                        icon: 'poll'
-                    }, {
-                        title: 'Pie Chart',
-                        icon: 'pie_chart'
                 }]
+            }
+        },
+        methods: {
+            showBar(){
+                this.barChart = true;
+                this.pieChart = false;
+            },
+            showPie(){
+                this.barChart = false;
+                this.pieChart = true;
             }
         }
     }
