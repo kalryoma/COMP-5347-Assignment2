@@ -23,7 +23,7 @@
                             </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile @click="$router.push('/analytics/overall');drawer=!drawer">
+                    <v-list-tile @click="$router.push('/analytics/author');drawer=!drawer">
                         <v-list-tile-action>
                             <v-icon dark>contacts</v-icon>
                         </v-list-tile-action>
@@ -35,7 +35,7 @@
                     </v-list-tile>
                 </v-list>
             </v-navigation-drawer>
-            <v-toolbar app fixed clipped-left class="cyan" dark>
+            <v-toolbar app fixed clipped-left flat class="cyan" dark>
                 <v-toolbar-side-icon v-if="$store.state.logged" @click.stop="drawer=!drawer"></v-toolbar-side-icon>
                 <v-toolbar-title @click="$router.push('/')"><a class="router">WikiLatic</a></v-toolbar-title>
                 <v-spacer></v-spacer>
