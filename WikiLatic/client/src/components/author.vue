@@ -32,7 +32,7 @@
                     </v-card>
                     <v-data-table :headers="headers" :items="revisions" hide-actions>
                         <template slot="items" slot-scope="props">
-                            <tr @click="props.expanded=!props.expanded">
+                            <tr>
                                 <td class="text-xs-center">{{ props.item.title }}</td>
                                 <td class="text-xs-center">{{ props.item.revisionNum }}</td>
                                 <td class="text-xs-center timestamp">
@@ -43,11 +43,6 @@
                                     </v-select>
                                 </td>
                             </tr>
-                        </template>
-                        <template slot="expand" slot-scope="props">
-                            <v-card flat>
-                                <v-card-text>Peek-a-boo!</v-card-text>
-                            </v-card>
                         </template>
                     </v-data-table>
                 </div>
@@ -120,7 +115,7 @@
         color: #fff;
     }
     .subheader{
-        padding-top: 18px;
+        padding-top: 28px;
     }
     .timestamp{
         max-width: 300px;

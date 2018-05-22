@@ -17,7 +17,8 @@
                 options:{
                     title: {
                         display: true,
-                        text: 'Revision Number by User Types'
+                        text: 'Revision Number by User Types',
+                        fontSize: 20
                     }
                 }
             }

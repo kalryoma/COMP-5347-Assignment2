@@ -13,7 +13,7 @@
                             </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile @click="$router.push('/analytics/overall');drawer=!drawer">
+                    <v-list-tile @click="$router.push('/analytics/individual');drawer=!drawer">
                         <v-list-tile-action>
                             <v-icon dark>inbox</v-icon>
                         </v-list-tile-action>
