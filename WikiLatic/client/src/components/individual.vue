@@ -19,7 +19,7 @@
                 <v-subheader>
                     <h3>Filter Revision Number:</h3>
                 </v-subheader>
-                <v-flex xs1>
+                <v-flex xs2>
                     <v-select
                         :items="revisionNumRange"
                         v-model="revisionNumFilter"
@@ -203,7 +203,7 @@
             async fetchData(title){
                 this.revisions = [];
                 if (title){
-                    let res = await analytics.individual({title: title, save: false});
+                    let res = await analytics.individual({title: title, save: true});
                     let data = res.data;
                     if (data){
                         if (data.DownloadNum>0){

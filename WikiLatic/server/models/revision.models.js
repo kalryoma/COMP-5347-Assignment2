@@ -83,7 +83,7 @@ RevisionSchema.statics.getHistoryByArticle = function (callback) {
     }])
     .then(function (result) {
         result.forEach(element => {
-            element.history = new Date(element.lastTime)-new Date(element.firstTime);
+            element.history = new Date()-new Date(element.firstTime);
         });
         result.sort((a, b) => b.history-a.history);
         top = result.slice(0, 3);
