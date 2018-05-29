@@ -1,0 +1,4 @@
+use WikiDB
+show collections
+db.createCollection("userType")
+db.userType.drop()

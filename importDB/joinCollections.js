@@ -1,3 +1,7 @@
+db.revision.find().forEach(function (doc) {
+    doc.timestamp = new ISODate(doc.timestamp);
+    db.revision.save(doc)
+});
 db.revision.aggregate([{
         $lookup: {
             from: "userType",
