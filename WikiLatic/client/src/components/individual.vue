@@ -202,6 +202,7 @@
         methods: {
             async fetchData(title){
                 this.revisions = [];
+                this.totalRevisionNum = 0;
                 if (title){
                     let res = await analytics.individual({title: title, save: true});
                     let data = res.data;

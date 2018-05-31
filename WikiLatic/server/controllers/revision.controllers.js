@@ -107,10 +107,11 @@ module.exports.getArticleData = async function (req, res, next) {
                 if (new Date()-latest>=24*3600*1000){
                     let url = "https://en.wikipedia.org/w/api.php?action=query";
                     url += "&titles="+title.replace(" ", "%20");
-                    url += "&prop=revisions&rvprop=timestamp|user";
+                    url += "&prop=revisions&rvprop=timestamp|user&rvlimit=max";
                     latest.setSeconds(latest.getSeconds()+1);
                     url += "&rvend="+latest.toISOString();
                     url += "&format=json&formatversion=2";
+                    console.log(url);
                     let fetchData = fetch(url, {method: "GET"})
                         .then(function (data) {
                             data = data["query"]["pages"][0]["revisions"];
